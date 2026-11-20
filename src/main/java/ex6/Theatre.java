@@ -1,5 +1,7 @@
 package ex6;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
@@ -49,6 +51,36 @@ public class Theatre {
             return false;
         }
         seat.setReserved(true);
+        return true;
+    }
+
+    public boolean reserveSeats(int count, char fromRow, char toRow,
+                                int fromSeat, int toSeat) {
+        if (count<1 || fromRow<'A' || fromRow>toRow || toRow>'Z'
+                || fromSeat<1 || fromSeat>toSeat || toSeat>seatsPerRow
+                || seats.isEmpty() || toRow>seats.last().getSeatNumber().charAt(0)) {
+            return false;
+        }
+
+        List<Seat> available= new ArrayList<>();
+        for (Seat seat : seats) {
+            char row= seat.getSeatNumber().charAt(0);
+            int number= Integer.parseInt(seat.getSeatNumber().substring(1));
+            if (row>=fromRow && row<=toRow && number>=fromSeat
+                    && number<=toSeat && !seat.isReserved()) {
+                available.add(seat);
+                if (available.size()==count) {
+                    break;
+                }
+            }
+        }
+
+        if (available.size()<count) {
+            return false;
+        }
+        for (Seat seat : available) {
+            seat.setReserved(true);
+        }
         return true;
     }
 
